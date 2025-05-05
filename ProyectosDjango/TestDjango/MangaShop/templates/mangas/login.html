@@ -1,0 +1,251 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Login / Registro - MangaShop</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'MangaShop/css/estilos.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body style="background-color: darkslategrey; color: white;">
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg" style="background-color: black;">
+    <div class="container-fluid">
+        <a class="navbar-brand text-white" href="{% url 'inicio' %}">Manga Shop</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'catalogo_mangas' %}">Catálogo</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="#">Carrito de compras</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'pagina_protegida' %}">Iniciar sesión</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'mangas_extras' %}">Webs externas</a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Contenido principal -->
+<div class="container mt-5">
+    <div class="row">
+        <!-- Login -->
+        <div class="col-md-6">
+            <h2 style="color: coral;">Iniciar Sesión</h2>
+            <div id="login-mensaje" class="mt-2"></div>
+            <form id="login-form">
+                <div class="mb-3">
+                    <label for="email_login" class="form-label">Correo electrónico</label>
+                    <input type="email" class="form-control" id="email_login" name="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password_login" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="password_login" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-outline-light">Ingresar</button>
+            </form>
+        </div>
+
+        <!-- Registro -->
+        <div class="col-md-6">
+            <h2 style="color: coral;">Registrarse</h2>
+            <form id="registro-form">
+                <div class="mb-3">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" class="form-control" name="first_name" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Apellido</label>
+                    <input type="text" class="form-control" name="last_name" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Correo electrónico</label>
+                    <input type="email" class="form-control" name="email" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Fecha de nacimiento</label>
+                    <input type="date" class="form-control" name="fecha_nacimiento" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" name="password" required>
+                    <div class="form-text text-light">
+                        La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo.
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Confirmar contraseña</label>
+                    <input type="password" class="form-control" name="password2" required>
+                </div>
+                <button type="submit" class="btn btn-success">Registrarse</button>
+            </form>
+            <div id="registro-mensaje" class="mt-3"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<div class="container-fluid p-5 text-white text-center mt-5" style="background-color: #1a171d;">
+    <p>MangaShop - Todos los derechos reservados © 2025</p>
+</div>
+
+<script>
+    // Validación de contraseña
+    function validarPassword(password) {
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&.,;:])[A-Za-z\d@$!%*#?&.,;:]{8,}$/;
+        return regex.test(password);
+    }
+
+    // Registro
+    document.getElementById('registro-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const form = e.target;
+        const datos = {
+            first_name: form.first_name.value,
+            last_name: form.last_name.value,
+            email: form.email.value,
+            fecha_nacimiento: form.fecha_nacimiento.value,
+            password: form.password.value,
+            password2: form.password2.value
+        };
+
+        const mensajeDiv = document.getElementById('registro-mensaje');
+        mensajeDiv.innerHTML = '';
+
+        if (datos.password !== datos.password2) {
+            mensajeDiv.innerHTML = '<div class="alert alert-danger">Las contraseñas no coinciden.</div>';
+            return;
+        }
+
+        if (!validarPassword(datos.password)) {
+            mensajeDiv.innerHTML = '<div class="alert alert-danger">La contraseña no cumple con los requisitos.</div>';
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/register/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datos)
+            });
+
+            const resultado = await response.json();
+
+            if (response.ok) {
+                mensajeDiv.innerHTML = '<div class="alert alert-success">Registro exitoso. Ahora puedes iniciar sesión.</div>';
+                form.reset();
+            } else {
+                let errores = resultado.errors || resultado.detail || resultado;
+                if (typeof errores === 'string') {
+                    mensajeDiv.innerHTML = `<div class="alert alert-danger">${errores}</div>`;
+                } else {
+                    const lista = Object.entries(errores).map(([key, val]) => `<li>${key}: ${val}</li>`).join('');
+                    mensajeDiv.innerHTML = `<div class="alert alert-danger"><ul>${lista}</ul></div>`;
+                }
+            }
+        } catch (error) {
+            mensajeDiv.innerHTML = `<div class="alert alert-danger">Error al registrar: ${error}</div>`;
+        }
+    });
+
+    // Login
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const form = e.target;
+        const datos = {
+            email: form.email.value,
+            password: form.password.value
+        };
+
+        const mensajeDiv = document.getElementById('login-mensaje');
+        mensajeDiv.innerHTML = '';
+
+        try {
+            const response = await fetch('/api/login/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datos)
+            });
+
+            const resultado = await response.json();
+
+            if (response.ok && resultado.access && resultado.refresh) {
+                localStorage.setItem('accessToken', resultado.access);
+                localStorage.setItem('refreshToken', resultado.refresh);  
+                mensajeDiv.innerHTML = '<div class="alert alert-success">Inicio de sesión exitoso.</div>';
+                form.reset();
+                window.location.href = '{% url "pagina_protegida" %}';
+            }
+ 
+            else {
+                mensajeDiv.innerHTML = `<div class="alert alert-danger">${resultado.detail || 'Error de autenticación.'}</div>`;
+            }
+        } catch (error) {
+            mensajeDiv.innerHTML = `<div class="alert alert-danger">Error al iniciar sesión: ${error}</div>`;
+        }
+    });
+</script>
+<script>
+async function fetchWithAuth(url, options = {}) {
+    const token = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    if (!token) {
+        window.location.href = "/login/";
+        return;
+    }
+
+    // Agrega token de acceso al header
+    options.headers = {
+        ...options.headers,
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+    };
+
+    let response = await fetch(url, options);
+
+    if (response.status === 401 && refreshToken) {
+        // Intenta refrescar token
+        const refreshResponse = await fetch("/api/token/refresh/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ refresh: refreshToken })
+        });
+
+        if (refreshResponse.ok) {
+            const newTokens = await refreshResponse.json();
+            localStorage.setItem("accessToken", newTokens.access);
+
+            // Reintenta la solicitud original con nuevo token
+            options.headers["Authorization"] = `Bearer ${newTokens.access}`;
+            response = await fetch(url, options);
+        } else {
+            // Token inválido o expirado completamente
+            localStorage.clear();
+            window.location.href = "/login/";
+        }
+    }
+
+    return response;
+}
+</script>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

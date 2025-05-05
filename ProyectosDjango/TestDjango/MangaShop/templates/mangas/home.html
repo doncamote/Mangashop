@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>¡Bienvenido a MangaShop!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap y estilos personalizados -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'MangaShop/css/estilos.css' %}">
+</head>
+<body style="background-color: darkslategrey; color: white;">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg" style="background-color: black;">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="{% url 'inicio' %}">Manga Shop</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'catalogo_mangas' %}">Catálogo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#">Carrito de compras</a>
+                    </li>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'pagina_protegida' %}">Iniciar sesión</a>
+                    </li>                   
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'mangas_extras' %}">Webs externas</a>
+                    </li>
+                     
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+<!-- Carrusel de Imágenes -->
+<div id="demo" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#demo" data-bs-slide-to="2"></button>
+    </div>
+    <div class="carousel-inner text-center">
+        <div class="carousel-item active">
+            <img src="{% static 'MangaShop/img/manga1.png' %}" alt="Dr. Stone" class="d-block mx-auto" style="width: 80%;">
+        </div>
+        <div class="carousel-item">
+            <img src="{% static 'MangaShop/img/manga3.jpg' %}" alt="Sakamoto Days" class="d-block mx-auto" style="width: 60%;">
+        </div>
+        <div class="carousel-item">
+            <img src="{% static 'MangaShop/img/manga5.jpg' %}" alt="Baccano!" class="d-block mx-auto" style="width: 60%;">
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+</div>
+
+
+    <!-- Bienvenida -->
+    <div class="container mt-5 text-center">
+        <h1 style="color: coral;">¡Bienvenido a MangaShop!</h1>
+        <p class="lead">Tu tienda de mangas online.</p>
+        <a href="{% url 'catalogo_mangas' %}" class="btn btn-outline-light mt-3">Ver catálogo de mangas</a>
+    </div>
+
+    <div class="container-fluid p-5 text-white text-center" style="background-color: #1a171d;">
+        <h1 style="color: coral;">Manga Shop</h1>
+        <p>La nueva propuesta en ventas de manga con envíos y cobertura en tu sector</p>
+    </div>
+    
+    <div class="container mt-5">
+        <div class="row text-center">
+            <div class="col-md-4 text-white">
+                <h3>Confiable</h3>
+                <p>Somos una tienda de ventas de manga online, con garantía de calidad en productos y eficiencia en envíos.</p>
+            </div>
+            <div class="col-md-4 text-white">
+                <h3>Accesible</h3>
+                <p>Priorizamos el acceso versátil a nuestros productos y a un costo amigable para el bolsillo.</p>
+            </div>
+            <div class="col-md-4 text-white">
+                <h3>Variado</h3>
+                <p>Nuestra misión es obtener ejemplares de diversas editoriales y asegurar la disponibilidad de títulos de difícil acceso.</p>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="container mt-5 text-white text-center">
+        <h2>Nuestra Historia</h2>
+        <p style="text-align: justify;">Manga Shop nace a partir del entusiasmo de personas aficionadas al género que, al notar la creciente demanda de mangas en el mercado, decidieron convertir su pasión en un proyecto innovador. Inspirados por la emoción que despierta cada historia, nuestra misión es ofrecer una experiencia de compra accesible, confiable y diversa.</p>
+        <p style="text-align: justify;">Más que una tienda, Manga Shop es un espacio donde los lectores pueden encontrar sus títulos favoritos y descubrir nuevas joyas. Nos esforzamos por modernizar la forma en que se distribuyen los mangas, con envíos rápidos y seguros, promociones constantes y una comunidad activa que comparte la misma pasión.</p>
+        <p style="text-align: justify;">Seguimos creciendo con la meta de convertirnos en un referente en la venta de mangas, manteniendo siempre el compromiso con la calidad y la satisfacción de nuestros clientes. ¡Únete a nuestra aventura y sumérgete en el mundo del manga con nosotros!</p>
+    </div>
+
+
+
+    <!-- Footer opcional -->
+    <div class="container-fluid p-5 text-white text-center mt-5" style="background-color: #1a171d;">
+        <p>MangaShop - Todos los derechos reservados © 2025</p>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
